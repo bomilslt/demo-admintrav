@@ -7,7 +7,7 @@
 
 export const CONFIG = {
     // API Base URL (Change this for production)
-    API_URL: 'http://localhost:5000/api',
+    API_URL: 'https://perpetual-empathy-production-e519.up.railway.app/api',
 
     // Feature Flags
     ENABLE_DEBUG_LOGS: false,
