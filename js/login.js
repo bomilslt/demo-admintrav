@@ -1,5 +1,7 @@
-const LOGIN_API_URL = 'http://localhost:5000/api/auth/login';
-const VERIFY_OTP_URL = 'http://localhost:5000/api/auth/verify-otp';
+import { CONFIG } from './config.js';
+
+const LOGIN_API_URL = `${CONFIG.API_URL}/auth/login`;
+const VERIFY_OTP_URL = `${CONFIG.API_URL}/auth/verify-otp`;
 
 let currentStep = 'login'; // login | otp
 let tempUserId = null;

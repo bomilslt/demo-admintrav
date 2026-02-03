@@ -9,6 +9,7 @@ import { exportToExcel, exportToPDF } from '../../js/utils/export-utils.js';
 import { DatePicker } from '../../js/components/date-picker.js';
 import { createEmployeeSelector } from '../../js/utils/employee-selector.js';
 import { Cache } from '../../js/services/cache.js';
+import { CONFIG } from '../../js/config.js';
 
 let allParcels = [];
 let currentFilter = 'all';
@@ -313,7 +314,11 @@ async function submitPickup() {
     try {
         window.showLoading('Vérification...');
         const token = localStorage.getItem('adminToken');
-        const res = await fetch('http://localhost:5000/api/operations/parcels/deliver-by-code', {
+        
+
+        // ... (inside the file)
+
+        const res = await fetch(`${CONFIG.API_URL}/operations/parcels/deliver-by-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
