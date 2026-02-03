@@ -1,0 +1,183 @@
+<div class="view-drivers">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Chauffeurs</h1>
+            <p class="page-subtitle">Gestion des chauffeurs</p>
+        </div>
+        <button class="btn btn-primary" id="btn-add-driver">
+            <svg class="icon-svg" style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nouveau chauffeur
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Tous</button>
+            <button class="filter-tab" data-filter="available">Disponibles</button>
+            <button class="filter-tab" data-filter="on_trip">En course</button>
+            <button class="filter-tab" data-filter="offline">Hors ligne</button>
+        </div>
+        <div class="search-premium-container">
+            <svg class="search-premium-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-premium-input" id="search-driver" placeholder="Rechercher...">
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Chauffeur</th>
+                        <th>Téléphone</th>
+                        <th>Note</th>
+                        <th>Trajets</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="drivers-table">
+                    <!-- Loaded by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add/Edit Driver -->
+<div id="modal-driver" class="modal-overlay global-modal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3 id="modal-driver-title">Nouveau Chauffeur</h3>
+            <button class="modal-close-x modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="driver-id">
+
+            <div class="form-section">
+                <label>Nom complet *</label>
+                <input type="text" class="form-input" id="driver-name" placeholder="Ex: Pierre Mbarga">
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Téléphone *</label>
+                    <input type="tel" class="form-input" id="driver-phone" placeholder="6XX XXX XXX">
+                </div>
+                <div class="form-section">
+                    <label>Numéro Permis</label>
+                    <input type="text" class="form-input" id="driver-license" placeholder="Permis B/D">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Statut</label>
+                    <select class="form-select" id="driver-status">
+                        <option value="available">Disponible</option>
+                        <option value="offline">Hors ligne</option>
+                        <option value="on_trip" disabled>En course (Auto)</option>
+                    </select>
+                </div>
+                <div class="form-section">
+                    <label>Années d'expérience</label>
+                    <input type="number" class="form-input" id="driver-exp" value="2">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-text modal-close">Annuler</button>
+            <button class="btn btn-primary" id="btn-save-driver">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Drivers View Styles */
+    .view-drivers .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .driver-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .name {
+        font-weight: 500;
+    }
+
+    .rating-cell {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+    }
+
+    .rating-cell svg {
+        width: 16px;
+        height: 16px;
+        color: #f59e0b;
+        fill: #f59e0b;
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 6px;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--text-muted);
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        background: var(--surface-alt);
+        color: var(--text);
+    }
+
+    .action-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .action-btn.danger:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+</style>

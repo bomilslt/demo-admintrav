@@ -1,0 +1,16 @@
+.view-bookings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.btn-icon{
+    border: 1px solid rgb(48, 71, 48) !important;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem !important;
+}

@@ -1,0 +1,135 @@
+<div class="view-dashboard">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Vue d'ensemble de l'activité</p>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="stat-revenue">--</div>
+                <div class="stat-label">Chiffre d'Affaires (Aujourd'hui)</div>
+                <div class="stat-change up" id="stat-revenue-change">--</div>
+            </div>
+        </div>
+
+        <!-- Cash Revenue -->
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <circle cx="12" cy="12" r="2" />
+                    <path d="M6 12h.01M18 12h.01" />
+                </svg>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="stat-revenue-cash">--</div>
+                <div class="stat-label">Encaissements (Caisse)</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">Ventes Guichet</div>
+            </div>
+        </div>
+
+        <!-- Digital Revenue -->
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                    <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="stat-revenue-digital">--</div>
+                <div class="stat-label">Ventes Digitales</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">App & Web</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                </svg>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="stat-bookings">--</div>
+                <div class="stat-label">Réservations (Aujourd'hui)</div>
+                <div class="stat-change up" id="stat-bookings-change">--</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="3" width="15" height="13" />
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                    <circle cx="5.5" cy="18.5" r="2.5" />
+                    <circle cx="18.5" cy="18.5" r="2.5" />
+                </svg>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="stat-trips">--</div>
+                <div class="stat-label">Trajets en cours</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" id="stat-drivers">--</div>
+                <div class="stat-label">Chauffeurs en service</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="dashboard-grid">
+        <!-- Active Trips -->
+        <div class="card active-trips-card">
+            <div class="card-header">
+                <h3 class="card-title">Trajets en cours</h3>
+                <a href="#/departures" class="view-all-link">Voir tout</a>
+            </div>
+            <div class="active-trips-list" id="active-trips">
+                <!-- Loaded by JS -->
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="card recent-bookings-card">
+            <div class="card-header">
+                <h3 class="card-title">Réservations récentes</h3>
+                <a href="#/bookings" class="view-all-link">Voir tout</a>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Places</th>
+                        <th>Montant</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-bookings">
+                    <!-- Loaded by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

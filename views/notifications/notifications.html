@@ -1,0 +1,27 @@
+<div class="view-notifications">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Notifications</h1>
+            <p class="page-subtitle">Alertes et messages système</p>
+        </div>
+        <button class="btn btn-secondary" id="btn-mark-all-read">
+            <svg class="icon-svg" style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Tout marquer comme lu
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Toutes</button>
+            <button class="filter-tab" data-filter="unread">Non lues</button>
+        </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="notifications-list" id="notifications-list">
+        <!-- Populated by JS -->
+    </div>
+</div>

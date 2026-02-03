@@ -1,0 +1,183 @@
+<div class="view-routes">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Routes & Tarifs</h1>
+            <p class="page-subtitle">Gestion des lignes et grilles tarifaires</p>
+        </div>
+        <button class="btn btn-primary" id="btn-add-route">
+            <svg class="icon-svg" style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nouvelle Route
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Toutes</button>
+            <button class="filter-tab" data-filter="active">Actives</button>
+            <button class="filter-tab" data-filter="inactive">Inactives</button>
+        </div>
+        <div class="search-premium-container">
+            <svg class="search-premium-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-premium-input" id="search-route" placeholder="Ville, code...">
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Route</th>
+                        <th>Distance / Durée</th>
+                        <th>Prix Passager</th>
+                        <th>Prix Colis (Base)</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="routes-table">
+                    <!-- Loaded by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add/Edit Route -->
+<div id="modal-route" class="modal-overlay global-modal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3 id="modal-route-title">Nouvelle Route</h3>
+            <button class="modal-close-x modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="route-id">
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Agence de départ *</label>
+                    <select class="form-select" id="route-origin">
+                        <option value="">Sélectionner une agence...</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="form-section">
+                    <label>Agence d'arrivée *</label>
+                    <select class="form-select" id="route-destination">
+                        <option value="">Sélectionner une agence...</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Distance (km)</label>
+                    <input type="number" class="form-input" id="route-distance" placeholder="250">
+                </div>
+                <div class="form-section">
+                    <label>Durée estimée</label>
+                    <input type="text" class="form-input" id="route-duration" placeholder="4h 30m">
+                </div>
+            </div>
+
+            <div class="form-divider">Tarification</div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Prix Passager (FCFA) *</label>
+                    <input type="number" class="form-input" id="route-price-pax" placeholder="5000">
+                </div>
+                <div class="form-section">
+                    <label>Prix Colis Base (FCFA) *</label>
+                    <input type="number" class="form-input" id="route-price-parcel" placeholder="1000">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label>Statut</label>
+                <select class="form-select" id="route-status">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-text modal-close">Annuler</button>
+            <button class="btn btn-primary" id="btn-save-route">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Routes View Styles */
+    .view-routes .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .route-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .route-arrow {
+        color: var(--text-light);
+    }
+
+    .price-tag {
+        font-family: monospace;
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--text);
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 6px;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--text-muted);
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        background: var(--surface-alt);
+        color: var(--text);
+    }
+
+    .action-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .action-btn.danger:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+</style>

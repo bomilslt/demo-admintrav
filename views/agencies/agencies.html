@@ -1,0 +1,327 @@
+<!-- 
+    AGENCIES VIEW - Branch Management
+    ==================================
+-->
+
+<div class="view-agencies">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">🏢 Gestion des Agences</h1>
+            <p class="page-subtitle">Points de vente et gares routières</p>
+        </div>
+        <button class="btn btn-primary" id="btn-add-agency">
+            <svg class="icon-svg" style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nouvelle Agence
+        </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="agency-stats">
+        <div class="stat-card">
+            <span class="stat-number" id="stat-total-agencies">0</span>
+            <span class="stat-label">Agences</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" id="stat-active-agencies">0</span>
+            <span class="stat-label">Actives</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" id="stat-total-staff">0</span>
+            <span class="stat-label">Employés</span>
+        </div>
+    </div>
+
+    <!-- Agencies Grid -->
+    <div class="agencies-grid" id="agencies-grid">
+        <!-- Populated by JS -->
+    </div>
+</div>
+
+<!-- Modal: Add/Edit Agency -->
+<div id="modal-agency" class="modal-overlay global-modal">
+    <div class="modal-dialog wide">
+        <div class="modal-header">
+            <h3 id="modal-agency-title">Nouvelle Agence</h3>
+            <button class="modal-close-x modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="agency-id">
+
+            <div class="form-section">
+                <label>Nom de l'agence *</label>
+                <input type="text" class="form-input" id="agency-name" placeholder="Ex: Yaoundé Central">
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Ville *</label>
+                    <input type="text" class="form-input" id="agency-city" placeholder="Yaoundé">
+                </div>
+                <div class="form-section">
+                    <label>Quartier *</label>
+                    <input type="text" class="form-input" id="agency-district" placeholder="Mvan">
+                </div>
+            </div>
+
+            <div class="form-divider">Localisation (Pour la carte)</div>
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Latitude</label>
+                    <input type="number" step="0.000001" class="form-input" id="agency-lat" placeholder="3.8480">
+                </div>
+                <div class="form-section">
+                    <label>Longitude</label>
+                    <input type="number" step="0.000001" class="form-input" id="agency-lng" placeholder="11.5021">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label>Adresse complète</label>
+                <input type="text" class="form-input" id="agency-address" placeholder="Rue, numéro, repères...">
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Téléphone *</label>
+                    <input type="tel" class="form-input" id="agency-phone" placeholder="+237 6XX XXX XXX">
+                </div>
+                <div class="form-section">
+                    <label>Manager</label>
+                    <select class="form-select" id="agency-manager">
+                        <option value="">Sélectionner...</option>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Horaires d'ouverture</label>
+                    <input type="text" class="form-input" id="agency-hours" placeholder="06:00 - 20:00">
+                </div>
+                <div class="form-section">
+                    <label>Statut</label>
+                    <select class="form-select" id="agency-status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-text modal-close">Annuler</button>
+            <button class="btn btn-primary" id="btn-save-agency">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Agencies View Styles */
+    .view-agencies .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    /* Stats Row */
+    .agency-stats {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px 30px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3b82f6;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    /* Agencies Grid */
+    .agencies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+
+    .agency-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #e5e7eb;
+    }
+
+    .agency-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .agency-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+
+    .agency-icon {
+        width: 48px;
+        height: 48px;
+        background: #f0f9ff;
+        color: #0369a1;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .agency-status {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .agency-status.active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .agency-status.inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .agency-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: #111827;
+    }
+
+    .agency-location {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .agency-details {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        font-size: 0.9rem;
+        color: #4b5563;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .agency-detail {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .agency-detail svg {
+        color: #9ca3af;
+        width: 16px;
+        height: 16px;
+    }
+
+    .agency-stats-mini {
+        display: flex;
+        justify-content: space-between;
+        background: #f9fafb;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .agency-stat {
+        text-align: center;
+    }
+
+    .agency-stat-value {
+        display: block;
+        font-weight: 600;
+        color: #111827;
+        font-size: 0.95rem;
+    }
+
+    .agency-stat-label {
+        font-size: 0.7rem;
+        color: #6b7280;
+        text-transform: uppercase;
+    }
+
+    .agency-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .agency-actions button {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid #e5e7eb;
+        background: white;
+        color: #374151;
+    }
+
+    .agency-actions button:hover {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+    }
+
+    .agency-actions button.danger:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+
+    /* Modal Wide */
+    .modal-dialog.wide {
+        max-width: 550px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+</style>

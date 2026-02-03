@@ -1,0 +1,41 @@
+.view-drivers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.driver-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.driver-cell .avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.driver-cell .name {
+    font-weight: 500;
+}
+
+.rating-cell {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rating-cell svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--accent);
+    stroke: none;
+}

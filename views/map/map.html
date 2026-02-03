@@ -1,0 +1,45 @@
+<div class="map-view-container">
+    <!-- Map Toolbar (Header) -->
+    <div class="map-toolbar">
+        <div class="toolbar-title">Trafic en temps réel</div>
+
+        <!-- Anomaly Dropdown (Moved inside Toolbar) -->
+        <div class="anomaly-dropdown-wrapper">
+            <button id="btn-anomalies" class="anomaly-btn">
+                <span class="icon">✅</span>
+                Anomalies
+                <span class="badge" id="anomaly-count" style="display:none">0</span>
+            </button>
+            <div id="anomaly-list" class="anomaly-dropdown-list hidden">
+                <!-- Items injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Area (Flex Grow) -->
+    <div class="map-area-wrapper">
+        <div id="global-map" class="full-screen-map"></div>
+
+        <!-- Map Controls -->
+        <button id="btn-refresh-map" class="map-control-btn refresh-btn" title="Actualiser la carte">
+            🔄 Actualiser
+        </button>
+
+        <!-- Refresh Indicator -->
+        <div id="map-refresh-indicator" class="map-refresh-indicator hidden">
+            <span class="pulse"></span> Mise à jour...
+        </div>
+    </div>
+
+    <!-- Map Overlay Stats (Moved outside wrapper to ensure top Z-Index) -->
+    <div class="map-overlay-stats">
+        <div class="stat-item">
+            <span class="label">Véhicules</span>
+            <span class="value" id="stats-active-vehicles">-</span>
+        </div>
+        <div class="stat-item">
+            <span class="label">Passagers</span>
+            <span class="value" id="stats-total-pax">-</span>
+        </div>
+    </div>
+</div>

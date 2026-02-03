@@ -1,0 +1,303 @@
+<!-- 
+    PROFILE VIEW - User Settings
+    =============================
+    User profile settings and preferences.
+    
+    API INTEGRATION:
+    - getCurrentUser() -> Get logged in user data
+    - updateProfile(data) -> Update profile
+    - changePassword(oldPwd, newPwd) -> Change password
+-->
+
+<div class="view-profile">
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">👤 Mon Profil</h1>
+    </div>
+
+    <div class="profile-layout">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-avatar-section">
+                <div class="profile-avatar" id="profile-avatar">AD</div>
+                <button class="btn btn-secondary small">📷 Changer photo</button>
+            </div>
+            <div class="profile-info">
+                <h2 id="profile-name">Admin User</h2>
+                <span class="profile-role">Administrateur</span>
+                <p class="profile-email" id="profile-email">admin@intercity.cm</p>
+            </div>
+        </div>
+
+        <!-- Settings Form -->
+        <div class="settings-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Informations personnelles</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Nom complet</label>
+                            <input type="text" class="form-input" id="setting-name" value="Admin User">
+                        </div>
+                        <div class="form-section">
+                            <label>Email</label>
+                            <input type="email" class="form-input" id="setting-email" value="admin@intercity.cm">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Téléphone</label>
+                            <input type="tel" class="form-input" id="setting-phone" value="+237 6XX XXX XXX">
+                        </div>
+                        <div class="form-section">
+                            <label>Langue</label>
+                            <select class="form-select" id="setting-language">
+                                <option value="fr" selected>Français</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="btn-save-profile">Enregistrer</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>🔒 Sécurité</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-section">
+                        <label>Mot de passe actuel</label>
+                        <input type="password" class="form-input" id="current-password" placeholder="••••••••">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Nouveau mot de passe</label>
+                            <input type="password" class="form-input" id="new-password" placeholder="••••••••">
+                        </div>
+                        <div class="form-section">
+                            <label>Confirmer</label>
+                            <input type="password" class="form-input" id="confirm-password" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" id="btn-change-password">Changer le mot de passe</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>🔔 Notifications</h3>
+                </div>
+                <div class="card-body">
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Notifications email</span>
+                            <span class="toggle-desc">Recevoir des alertes par email</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="notif-email" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Alertes critiques</span>
+                            <span class="toggle-desc">Alertes pour problèmes urgents</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="notif-critical" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Rapports quotidiens</span>
+                            <span class="toggle-desc">Résumé chaque jour à 18h</span>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="notif-daily">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Profile View Styles */
+    .view-profile .page-header {
+        margin-bottom: 24px;
+    }
+
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-avatar-section {
+        margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        font-size: 32px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+    }
+
+    .profile-info h2 {
+        margin: 0 0 4px 0;
+        font-size: 1.25rem;
+    }
+
+    .profile-role {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #dbeafe;
+        color: #1d4ed8;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .profile-email {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    /* Settings Cards */
+    .settings-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .form-section {
+        margin-bottom: 16px;
+    }
+
+    .form-section label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #374151;
+        font-size: 0.9rem;
+    }
+
+    /* Toggle Switch */
+    .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .toggle-row:last-child {
+        border-bottom: none;
+    }
+
+    .toggle-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .toggle-label {
+        font-weight: 500;
+    }
+
+    .toggle-desc {
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+
+    .toggle {
+        position: relative;
+        width: 48px;
+        height: 24px;
+    }
+
+    .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #d1d5db;
+        border-radius: 24px;
+        transition: 0.3s;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background: white;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    .toggle input:checked+.toggle-slider {
+        background: #3b82f6;
+    }
+
+    .toggle input:checked+.toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

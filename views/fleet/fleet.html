@@ -1,0 +1,209 @@
+<div class="view-fleet">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Gestion de la Flotte</h1>
+            <p class="page-subtitle">Parc automobile et maintenance</p>
+        </div>
+        <button class="btn btn-primary" id="btn-add-vehicle">
+            <svg class="icon-svg" style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nouveau Véhicule
+        </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid mb-4">
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value" id="stat-total-vehicles">0</span>
+                <span class="stat-label">Total Véhicules</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value" id="stat-active-vehicles">0</span>
+                <span class="stat-label">En Service</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
+                    </path>
+                </svg>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value" id="stat-maintenance-vehicles">0</span>
+                <span class="stat-label">Maintenance</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Tous</button>
+            <button class="filter-tab" data-filter="active">Actifs</button>
+            <button class="filter-tab" data-filter="maintenance">Maintenance</button>
+        </div>
+        <div class="search-premium-container">
+            <svg class="search-premium-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-premium-input" id="search-vehicle" placeholder="Plaque, Modèle...">
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px"></th> <!-- Icon -->
+                        <th>Véhicule</th>
+                        <th>Type</th>
+                        <th>Capacité</th>
+                        <th>Kilométrage</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="vehicles-table">
+                    <!-- Loaded by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add/Edit Vehicle -->
+<div id="modal-vehicle" class="modal-overlay global-modal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3 id="modal-vehicle-title">Nouveau Véhicule</h3>
+            <button class="modal-close-x modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="vehicle-id">
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Immatriculation (Plaque) *</label>
+                    <input type="text" class="form-input" id="vehicle-plate" placeholder="Ex: CE-1234-AA">
+                </div>
+                <div class="form-section">
+                    <label>Modèle *</label>
+                    <input type="text" class="form-input" id="vehicle-model" placeholder="Ex: Toyota Coaster">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Type / Service</label>
+                    <select class="form-select" id="vehicle-type">
+                        <option value="Standard">Standard</option>
+                        <option value="VIP">VIP</option>
+                        <option value="Express">Express</option>
+                    </select>
+                </div>
+                <div class="form-section">
+                    <label>Catégorie (Icône)</label>
+                    <select class="form-select" id="vehicle-category">
+                        <option value="van">Van (Hiace)</option>
+                        <option value="minibus">Minibus (Coaster)</option>
+                        <option value="bus">Gros Porteur</option>
+                    </select>
+                </div>
+                <div class="form-section">
+                    <label>Capacité (Places) *</label>
+                    <input type="number" class="form-input" id="vehicle-capacity" placeholder="Ex: 70">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-section">
+                    <label>Kilométrage (km)</label>
+                    <input type="number" class="form-input" id="vehicle-mileage" placeholder="0">
+                </div>
+                <div class="form-section">
+                    <label>Statut</label>
+                    <select class="form-select" id="vehicle-status">
+                        <option value="active">Actif / Disponible</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="inactive">Inactif</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-text modal-close">Annuler</button>
+            <button class="btn btn-primary" id="btn-save-vehicle">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Fleet View Specific Styles */
+    .vehicle-info {
+        font-weight: 500;
+        color: var(--text);
+    }
+
+    .vehicle-sub {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .mb-4 {
+        margin-bottom: 24px;
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 6px;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--text-muted);
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        background: var(--surface-alt);
+        color: var(--text);
+    }
+
+    .action-btn.danger:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+</style>

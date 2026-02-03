@@ -1,0 +1,629 @@
+<div class="view-departure-details">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-back">
+            <button class="btn btn-secondary" onclick="history.back()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Retour
+            </button>
+            <div>
+                <h1 class="page-title" id="page-title">Détails du départ</h1>
+                <p class="page-subtitle" id="page-subtitle">--</p>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="badge" id="status-badge">--</span>
+            <div id="status-actions">
+                <!-- Injected via JS based on status -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Grid: Info, Finance Pax, Finance Parcel, Driver -->
+    <div class="top-grid">
+        <!-- Trip Info -->
+        <div class="card compact-card">
+            <div class="card-header">
+                <h3 class="card-title">Trajet</h3>
+            </div>
+            <div class="info-grid compact">
+                <div class="info-row">
+                    <span class="label">Départ:</span>
+                    <span class="value" id="info-origin">--</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Arrivée:</span>
+                    <span class="value" id="info-destination">--</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Heure:</span>
+                    <span class="value" id="info-departure-time">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Stats (Pax) -->
+        <div class="card compact-card highlight-card">
+            <div class="card-header">
+                <h3 class="card-title">Finances (Passagers)</h3>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-label">Total</span>
+                    <span class="stat-val large" id="stat-revenue">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Encaissé</span>
+                    <span class="stat-val success" id="stat-paid">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Stats (Parcels) -->
+        <div class="card compact-card highlight-card"
+            style="background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%);">
+            <div class="card-header">
+                <h3 class="card-title">Finances (Colis)</h3>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-label">Total</span>
+                    <span class="stat-val large" id="stat-parcel-revenue">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Encaissé</span>
+                    <span class="stat-val success" id="stat-parcel-paid">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver -->
+        <div class="card compact-card">
+            <div class="card-header">
+                <h3 class="card-title">Chauffeur</h3>
+            </div>
+            <div class="driver-mini">
+                <div class="driver-avatar" id="driver-avatar">--</div>
+                <div>
+                    <div class="driver-name" id="driver-name">--</div>
+                    <div class="driver-vehicle" id="driver-vehicle">--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="main-layout">
+
+        <!-- Left Column: Manifest (Priority) -->
+        <div class="layout-col-main">
+            <div class="card manifest-card">
+                <div class="card-header">
+                    <div class="header-left">
+                        <h3>Manifeste Passagers</h3>
+                        <span class="badge-pill" id="passengers-count">0/15</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary small" id="btn-print-manifest">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2">
+                                </path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                        </button>
+                        <button class="btn btn-primary small" id="btn-sell-ticket">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Vendre Ticket
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Siège</th>
+                                <th>Passager</th>
+                                <th>Destination</th>
+                                <th>Prix</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="manifest-table">
+                            <!-- Loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Visuals & Map -->
+        <div class="layout-col-side">
+            <!-- Map (for in_progress trips) -->
+            <div class="card map-card" id="map-card" style="display: none;">
+                <div class="card-header">
+                    <h3 class="card-title">Suivi</h3>
+                    <span class="live-blink">LIVE</span>
+                </div>
+                <div id="map" class="map-container small-map"></div>
+                <div class="eta-mini" id="eta-panel">
+                    <div class="eta-item"><span>temps restant:⏱</span> <span id="eta-time">--</span></div>
+                    <div class="eta-item"><span>distance restante:📍</span> <span id="eta-distance">--</span></div>
+                    <div class="eta-item"><span>arrivée:🏁</span> <span id="eta-arrival">--</span></div>
+                </div>
+            </div>
+
+            <!-- Parcels Manifest -->
+            <div class="card parcels-card">
+                <div class="card-header">
+                    <div class="header-left">
+                        <h3>📦 Colis</h3>
+                        <span class="badge-pill" id="parcels-count">0</span>
+                    </div>
+                    <button class="btn btn-primary small" id="btn-add-parcel">+ Colis</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table compact-table">
+                        <thead>
+                            <tr>
+                                <th>Expéditeur</th>
+                                <th>Destinataire</th>
+                                <th>Prix</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="parcels-table">
+                            <!-- Loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Sell Ticket -->
+<div id="modal-sell-ticket" class="modal-overlay">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3>Nouveau Billet</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- Client Search/Entry -->
+            <div class="form-section">
+                <label>Passager</label>
+                <div class="input-group">
+                    <input type="text" class="form-input" id="ticket-client-name" placeholder="Nom du client">
+                    <input type="tel" class="form-input" id="ticket-client-phone" placeholder="Téléphone">
+                </div>
+            </div>
+
+            <!-- Trip Details -->
+            <div class="form-section">
+                <label>Trajet & Siège</label>
+                <div class="input-group">
+                    <select class="form-select" id="ticket-seat-select">
+                        <option value="">Choisir siège...</option>
+                    </select>
+                    <input type="text" class="form-input" id="ticket-destination" placeholder="Destination (ex: Edéa)">
+                </div>
+            </div>
+
+            <!-- Pricing -->
+            <div class="form-section bg-light">
+                <label>Paiement</label>
+                <div class="input-group">
+                    <input type="number" class="form-input" id="ticket-price" placeholder="Prix (FCFA)">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="ticket-prepaid">
+                        <label for="ticket-prepaid">Déjà payé (Guichet/Web)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-text modal-close">Annuler</button>
+            <button class="btn btn-primary" id="btn-confirm-sell">Émettre Billet</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Transfer -->
+<div id="modal-transfer" class="modal-overlay">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3>Transférer Passager</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Transférer <strong id="transfer-pax-name">--</strong> vers :</p>
+            <div id="transfer-info-box"
+                style="display:none; margin-bottom: 12px; font-size: 0.9em; background: #eff6ff; color: #1e40af; padding: 10px; border-radius: 6px; border: 1px solid #dbeafe;">
+            </div>
+            <div class="form-section">
+                <label>Nouveau Départ</label>
+                <select class="form-select" id="transfer-dep-select">
+                    <option value="">Sélectionner un départ...</option>
+                    <!-- Populated by JS -->
+                    <option value="dep-002">Dép. 14:00 - Bus B302 (8 places disp.)</option>
+                    <option value="dep-003">Dép. 16:00 - Bus V101 (12 places disp.)</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-text modal-close">Annuler</button>
+            <button class="btn btn-primary" id="btn-confirm-transfer">Confirmer Transfert</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Parcel -->
+<div id="modal-add-parcel" class="modal-overlay">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3>📦 Nouveau Colis</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-section">
+                <label>Expéditeur</label>
+                <div class="input-group">
+                    <input type="text" class="form-input" id="parcel-sender-name" placeholder="Nom">
+                    <input type="tel" class="form-input" id="parcel-sender-phone" placeholder="Téléphone">
+                </div>
+            </div>
+            <div class="form-section">
+                <label>Destinataire</label>
+                <div class="input-group">
+                    <input type="text" class="form-input" id="parcel-recipient-name" placeholder="Nom">
+                    <input type="tel" class="form-input" id="parcel-recipient-phone" placeholder="Téléphone">
+                </div>
+            </div>
+            <div class="form-section">
+                <label>Destination & Prix</label>
+                <div class="input-group">
+                    <input type="text" class="form-input" id="parcel-destination" placeholder="Ville destination">
+                    <input type="number" class="form-input" id="parcel-price" placeholder="Prix (FCFA)">
+                </div>
+            </div>
+            <div class="form-section">
+                <label>Description (optionnel)</label>
+                <input type="text" class="form-input" id="parcel-description" placeholder="Ex: Carton électroménager">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-text modal-close">Annuler</button>
+            <button class="btn btn-primary" id="btn-confirm-parcel">Enregistrer Colis</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* New Layout Styles */
+    .top-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .main-layout {
+        display: grid;
+        /* Balanced columns */
+        grid-template-columns: 1.4fr 1fr;
+        gap: 24px;
+    }
+
+    @media (max-width: 1200px) {
+        .main-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Compact Cards */
+    .compact-card {
+        padding: 16px;
+        min-height: 120px;
+    }
+
+    .info-grid.compact {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+    }
+
+    .info-row .label {
+        color: #6b7280;
+    }
+
+    .info-row .value {
+        font-weight: 500;
+    }
+
+    /* Stats Highlight */
+    .highlight-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+        border: 1px solid #e5e7eb;
+    }
+
+    .stats-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        padding-top: 10px;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-val {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .stat-val.success {
+        color: #059669;
+    }
+
+    /* Card Headers */
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        /* Added spacing */
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Driver Mini */
+    .driver-mini {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Badges */
+    .badge-pill {
+        background: #f3f4f6;
+        color: #4b5563;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* Modal System */
+    .modal-overlay {
+        display: none;
+        /* Hidden default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-dialog {
+        background: white;
+        width: 100%;
+        max-width: 450px;
+        border-radius: 12px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        transform: translateY(20px);
+        transition: transform 0.2s;
+        overflow: hidden;
+    }
+
+    .modal-overlay.active .modal-dialog {
+        transform: translateY(0);
+    }
+
+    .modal-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        padding: 16px 20px;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .form-section {
+        margin-bottom: 16px;
+    }
+
+    .form-section.bg-light {
+        background: #f3f4f6;
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    /* Map Adjustments */
+    .small-map {
+        height: 250px;
+    }
+
+    .live-blink {
+        color: #ef4444;
+        font-weight: 700;
+        font-size: 0.75rem;
+        animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* Tables */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px;
+        text-align: left;
+    }
+
+    /* Compact Manifest Table for 70+ passengers */
+    .manifest-card .data-table {
+        font-size: 0.85rem;
+    }
+
+    .manifest-card .data-table td,
+    .manifest-card .data-table th {
+        padding: 8px 10px;
+        line-height: 1.3;
+    }
+
+    .manifest-card .data-table tbody tr {
+        height: auto;
+    }
+
+    /* Parcels Card - Cleaned up */
+    .parcels-card .data-table {
+        font-size: 0.8rem;
+    }
+
+    .parcels-card .data-table td,
+    .parcels-card .data-table th {
+        padding: 8px 10px;
+        line-height: 1.3;
+    }
+
+    .parcels-card .contact-info {
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+
+    .parcels-card .action-buttons {
+        display: flex;
+        gap: 6px;
+    }
+
+    /* Action Buttons */
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 4px;
+        border: 1px solid #e5e7eb;
+        background: white;
+        color: #4b5563;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .btn-icon:hover {
+        background: #f9fafb;
+        border-color: #d1d5db;
+        color: #111827;
+    }
+
+    .btn-icon.danger:hover {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #dc2626;
+    }
+
+    /* Row dimmed for cancelled */
+    .row-dimmed {
+        opacity: 0.5;
+        text-decoration: line-through;
+        background-color: #f9fafb;
+    }
+</style>

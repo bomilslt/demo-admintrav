@@ -1,0 +1,120 @@
+<div class="view-bookings">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Réservations</h1>
+            <p class="page-subtitle">Toutes les réservations</p>
+        </div>
+    </div>
+
+    <div class="filters-bar" style="display: flex; gap: 16px; justify-content: space-between; align-items: center;">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Toutes</button>
+            <button class="filter-tab" data-filter="confirmed">Confirmées</button>
+            <button class="filter-tab" data-filter="pending">En attente</button>
+            <button class="filter-tab" data-filter="cancelled">Annulées</button>
+        </div>
+        <div class="search-box">
+            <input type="text" id="booking-search" placeholder="Rechercher (Nom, Tél, ID)..."
+                style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; width: 250px;">
+        </div>
+    </div>
+
+    <!-- Sale Channel Filter -->
+    <div class="filters-bar" style="display: flex; gap: 12px; align-items: center; margin-top: 8px;">
+        <span style="font-weight: 500; color: var(--text-muted); font-size: 0.85rem;">Canal:</span>
+        <div class="filter-tabs channel-tabs" style="gap: 8px;">
+            <button class="filter-tab small active" data-channel="all">Tous</button>
+            <button class="filter-tab small" data-channel="counter">🏢 Guichet</button>
+            <button class="filter-tab small" data-channel="online">📱 En ligne</button>
+            <button class="filter-tab small" data-channel="phone">📞 Téléphone</button>
+        </div>
+    </div>
+
+    <!-- Advanced Filters -->
+    <div class="filters-bar"
+        style="display: flex; gap: 16px; align-items: center; margin-top: 12px; flex-wrap: wrap; padding-top: 12px; border-top: 1px dashed var(--border-color);">
+
+        <!-- Date Range -->
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Période:</span>
+            <div id="date-from-container" style="width: 140px;"></div>
+            <span style="color: var(--text-muted);">-</span>
+            <div id="date-to-container" style="width: 140px;"></div>
+        </div>
+
+        <!-- Employee Selector -->
+        <div id="employee-filter-container" style="min-width: 200px;"></div>
+
+        <!-- Reset -->
+        <button id="reset-filters-btn" class="btn btn-secondary small" style="margin-left: auto;">
+            &times; Filtres
+        </button>
+    </div>
+
+    <div class="card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Passager</th>
+                    <th>Téléphone</th>
+                    <th>Voyage</th> <!-- Changed from Client to Voyage context usually better -->
+                    <th>Places</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bookings-table">
+                <!-- Loaded by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div id="cancel-modal" class="modal-overlay">
+    <div class="modal-dialog small-dialog">
+        <div class="modal-header warning">
+            <h3>Annuler la réservation ?</h3>
+            <button class="modal-close-x" onclick="closeCancelModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Cette action libérera les places immédiatement. Êtes-vous sûr ?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeCancelModal()">Non</button>
+            <button class="btn btn-danger" id="confirm-cancel-btn">Oui, Annuler</button>
+        </div>
+    </div>
+</div>
+
+<!-- Transfer Modal -->
+<div id="transfer-modal" class="modal-overlay">
+    <div class="modal-dialog">
+        <div class="modal-header info">
+            <h3>Transférer la Réservation</h3>
+            <button class="modal-close-x" onclick="closeTransferModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: 12px; color: var(--text-muted);">Sélectionnez le nouveau départ pour ce passager.
+            </p>
+
+            <div class="form-section">
+                <label>Nouveau Départ</label>
+                <select id="transfer-departure-select" class="form-select">
+                    <option value="">Chargement des départs...</option>
+                </select>
+            </div>
+
+            <div id="transfer-info-box"
+                style="display:none; background: var(--surface-alt); padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 0.9rem;">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeTransferModal()">Annuler</button>
+            <button class="btn btn-primary" id="confirm-transfer-btn" disabled>Confirmer le Transfert</button>
+        </div>
+    </div>
+</div>

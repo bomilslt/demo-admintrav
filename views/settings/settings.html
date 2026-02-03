@@ -1,0 +1,610 @@
+<div class="view-settings">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Paramètres</h1>
+            <p class="page-subtitle">Configuration globale de l'application</p>
+        </div>
+        <button class="btn btn-primary" id="btn-save-settings">
+            <svg class="icon-svg" style="width:18px;height:18px;margin-right:6px" viewBox="0 0 24 24">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            Enregistrer les modifications
+        </button>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-nav mb-4">
+        <button class="tab-btn active" data-tab="general">Général</button>
+        <button class="tab-btn" data-tab="bookings">Réservations</button>
+        <button class="tab-btn" data-tab="payments">Paiements / API</button>
+        <button class="tab-btn" data-tab="notifications">Notifications</button>
+        <button class="tab-btn" data-tab="receipt">Facture / Reçu</button>
+        <button class="tab-btn" data-tab="system">Système</button>
+    </div>
+
+    <div class="settings-container tab-content active" id="tab-general">
+        <!-- General Settings -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">Général</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-section">
+                        <label>Nom de la Compagnie</label>
+                        <input type="text" class="form-input" id="setting-app-name" value="INTERCITY">
+                    </div>
+                    <div class="form-section">
+                        <label>Email de support</label>
+                        <input type="email" class="form-input" id="setting-support-email" value="support@intercity.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-section">
+                        <label>Devise par défaut</label>
+                        <select class="form-select" id="setting-currency">
+                            <option value="XAF">FCFA (XAF)</option>
+                            <option value="EUR">Euro (EUR)</option>
+                            <option value="USD">Dollar (USD)</option>
+                        </select>
+                    </div>
+                    <div class="form-section">
+                        <label>Langue par défaut</label>
+                        <select class="form-select" id="setting-language">
+                            <option value="fr">Français</option>
+                            <option value="en">Anglais</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Rules -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">Règles Business</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-section">
+                        <label>Taxe par défaut (%)</label>
+                        <input type="number" class="form-input" id="setting-tax-rate" value="19.25">
+                    </div>
+                    <div class="form-section">
+                        <label>Frais de timbre (FCFA)</label>
+                        <input type="number" class="form-input" id="setting-stamp-fee" value="1000">
+                    </div>
+                </div>
+                <div class="form-section">
+                    <label>Délai d'annulation autorisé (Heures avant départ)</label>
+                    <input type="number" class="form-input" id="setting-cancellation-window" value="24">
+                    <p class="text-xs text-muted mt-1">Les clients ne pourront plus annuler passé ce délai.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKINGS TAB -->
+    <div class="settings-container tab-content" id="tab-bookings">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">Règles de Réservation & Remboursement</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-section">
+                    <label>Délai de remboursement autorisé (Heures avant départ)</label>
+                    <input type="number" class="form-input" id="setting-refund-deadline" value="24" min="0">
+                    <p class="text-xs text-muted mt-1">
+                        Si un client annule avant ce délai, le billet est éligible au remboursement.<br>
+                        <strong>Exemple :</strong> Si le départ est à 10h00 et le délai est de 24h, le client doit
+                        annuler avant la veille 10h00 pour être remboursé.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENTS TAB -->
+    <div class="settings-container tab-content" id="tab-payments">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">Configuration des Paiements</h3>
+                <p class="text-muted text-sm">Activez les méthodes de paiement disponibles pour vos clients.</p>
+            </div>
+            <div class="card-body" id="payments-config-container">
+                <div class="text-center p-4">Chargement...</div>
+                <!-- Dynamic Content Loaded via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATIONS TAB -->
+    <div class="settings-container tab-content" id="tab-notifications">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">Configuration des Notifications</h3>
+                <p class="text-muted text-sm">Gérez les canaux d'envoi (Email, SMS) pour les alertes clients.</p>
+            </div>
+            <div class="card-body">
+                <!-- SECURITY SECTION -->
+                <div class="form-row border-bottom pb-4 mb-4" style="border-bottom:1px solid var(--border);">
+                    <div class="form-section">
+                        <h4>Sécurité Admin (OTP)</h4>
+                        <div class="flex-row align-center mt-2">
+                            <label class="switch">
+                                <input type="checkbox" id="notif-otp-active">
+                                <span class="slider round"></span>
+                            </label>
+                            <span>Activer la vérification en 2 étapes (Code Email)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMAIL SECTION -->
+                <div class="form-row border-bottom pb-4 mb-4" style="border-bottom:1px solid var(--border);">
+                    <div class="form-section">
+                        <h4>Paramètres Email</h4>
+                        <div class="flex-row align-center mt-2">
+                            <label class="switch">
+                                <input type="checkbox" id="notif-email-active">
+                                <span class="slider round"></span>
+                            </label>
+                            <span>Activer les emails</span>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <label>Fournisseur</label>
+                        <select class="form-select" id="notif-email-provider" onchange="window.toggleEmailSettings()">
+                            <option value="smtp">SMTP (Gmail, Outlook, Hébergeur)</option>
+                            <option value="ses">Amazon SES</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SMTP SETTINGS -->
+                <div id="smtp-settings" class="email-settings-group">
+                    <h5 class="mb-2">Configuration SMTP</h5>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Hôte SMTP (Host)</label>
+                            <input type="text" class="form-input" id="notif-smtp-host" placeholder="smtp.gmail.com">
+                        </div>
+                        <div class="form-section">
+                            <label>Port</label>
+                            <input type="number" class="form-input" id="notif-smtp-port" placeholder="587">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Utilisateur</label>
+                            <input type="text" class="form-input" id="notif-smtp-user" placeholder="user@example.com">
+                        </div>
+                        <div class="form-section">
+                            <label>Mot de passe</label>
+                            <input type="password" class="form-input" id="notif-smtp-pass" placeholder="********">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Email Expéditeur</label>
+                            <input type="email" class="form-input" id="notif-smtp-from"
+                                placeholder="no-reply@intercity.com">
+                        </div>
+                        <div class="form-section flex-row align-center pt-4">
+                            <input type="checkbox" id="notif-smtp-tls" checked>
+                            <label for="notif-smtp-tls" class="mb-0 ml-2">Utiliser TLS</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AWS SES SETTINGS -->
+                <div id="ses-settings" class="email-settings-group" style="display:none;">
+                    <h5 class="mb-2">Configuration Amazon SES</h5>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Access Key ID</label>
+                            <input type="text" class="form-input" id="notif-aws-key" placeholder="AKIA...">
+                        </div>
+                        <div class="form-section">
+                            <label>Secret Access Key</label>
+                            <input type="password" class="form-input" id="notif-aws-secret" placeholder="********">
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <label>Région</label>
+                        <input type="text" class="form-input" id="notif-aws-region" placeholder="eu-west-1">
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <!-- SMS SECTION -->
+                <div class="form-section">
+                    <h4>Paramètres SMS</h4>
+                    <div class="flex-row align-center mb-4">
+                        <label class="switch">
+                            <input type="checkbox" id="notif-sms-active">
+                            <span class="slider round"></span>
+                        </label>
+                        <span>Activer les SMS (Twilio / API Locale)</span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Fournisseur</label>
+                            <select class="form-select" id="notif-sms-provider">
+                                <option value="none">Aucun</option>
+                                <option value="twilio">Twilio</option>
+                                <option value="local">API Locale</option>
+                            </select>
+                        </div>
+                        <div class="form-section">
+                            <label>Clé API</label>
+                            <input type="password" class="form-input" id="notif-sms-key" placeholder="API Key">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECEIPT TAB (REPLACED WITH PREVIEW LAYOUT) -->
+    <div class="settings-container tab-content" id="tab-receipt">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">Configuration du Ticket de Caisse</h3>
+                <p class="text-muted text-sm">Personnalisez l'apparence des reçus clients (Format 80mm).</p>
+            </div>
+            <div class="card-body"
+                style="display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start;">
+                <!-- FORM COLUMN -->
+                <div>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Texte d'En-tête</label>
+                            <input type="text" class="form-input" id="receipt-header" placeholder="INTERCITY TRANSPORT">
+                        </div>
+                        <div class="form-section">
+                            <label>Texte de Pied de page</label>
+                            <input type="text" class="form-input" id="receipt-footer"
+                                placeholder="Merci de votre visite">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>Logo de l'agence (Image)</label>
+                            <input type="file" id="receipt-logo-input" accept="image/*" class="form-input">
+                            <p class="text-xs text-muted">Format recommandé: PNG/JPG (Max 500px large)</p>
+                            <!-- Mini Preview -->
+                            <div id="receipt-logo-preview" style="margin-top:10px; max-height:100px; display:none;">
+                                <img src="" style="max-height:80px; border:1px solid #ddd; padding:4px;">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <label>Options d'affichage</label>
+                            <div class="flex-row align-center mb-2">
+                                <input type="checkbox" id="receipt-show-logo" checked>
+                                <label for="receipt-show-logo" style="margin:0; margin-left:8px;">Afficher le
+                                    Logo</label>
+                            </div>
+                            <div class="flex-row align-center">
+                                <input type="checkbox" id="receipt-show-qr" checked>
+                                <label for="receipt-show-qr" style="margin:0; margin-left:8px;">Afficher le QR
+                                    Code</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PREVIEW COLUMN -->
+                <div class="receipt-preview-container">
+                    <h4 style="margin-top:0; color:#666; font-size:0.9rem; text-align:center; margin-bottom:10px;">
+                        APERÇU TEMPS RÉEL</h4>
+                    <div class="thermal-receipt">
+                        <div id="preview-logo-container" style="text-align:center; margin-bottom:15px;">
+                            <img id="preview-logo-img" src="" style="max-width:40mm; max-height:25mm; display:none;">
+                        </div>
+
+                        <div id="preview-header"
+                            style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:5px;">INTERCITY
+                            TRANSPORT</div>
+                        <div style="text-align:center; font-size:12px; margin-bottom:5px;">Reçu de Voyage</div>
+                        <div style="border-top:1px dashed #000; margin:5px 0;"></div>
+
+                        <div style="text-align:center; font-weight:bold; font-size:13px; margin:5px 0;">YAOUNDE --->
+                            DOUALA</div>
+
+                        <div style="font-size:10px; margin-top:10px;">
+                            Passager: francky bomil<br>
+                            Tél: 699 99 99 99
+                        </div>
+
+                        <div style="margin-top:10px; font-size:11px;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Référence:</span><span>T-12345</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Date:</span><span>25/01/2026</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Heure:</span><span>08:00</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between;"><span>Nb.
+                                    places:</span><span>1</span></div>
+                            <div style="display:flex; justify-content:space-between;"><span>Véhicule:</span><span>VIP
+                                    Bus</span></div>
+                        </div>
+
+                        <div style="border-top:1px solid #000; margin:10px 0;"></div>
+                        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px;">
+                            <span>TOTAL:</span><span>5000 XAF</span>
+                        </div>
+
+                        <div id="preview-qr-container" style="text-align:center; margin-top:15px;">
+                            <div
+                                style="width:100px; height:100px; background:#eee; margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:10px; color:#999;">
+                                QR CODE</div>
+                        </div>
+
+                        <div id="preview-footer"
+                            style="text-align:center; font-size:10px; font-style:italic; margin-top:15px;">Merci de
+                            votre visite</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SYSTEM TAB -->
+    <div class="settings-container tab-content" id="tab-system">
+        <div class="card">
+            <div class="card-header danger">
+                <h3 class="card-title text-danger">Système & Maintenance</h3>
+            </div>
+            <div class="card-body">
+                <div class="flex-row align-center">
+                    <div class="form-section flex-1">
+                        <label>Mode Maintenance</label>
+                        <p class="text-xs text-muted">Empêche les nouvelles réservations côté client.</p>
+                    </div>
+                    <div class="form-section w-auto">
+                        <label class="switch">
+                            <input type="checkbox" id="setting-maintenance-mode">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <hr class="divider">
+                <div class="flex-row align-center">
+                    <div class="form-section flex-1">
+                        <label>Mode Debug (API Log)</label>
+                        <p class="text-xs text-muted">Affiche les détails techniques des erreurs.</p>
+                    </div>
+                    <div class="form-section w-auto">
+                        <label class="switch">
+                            <input type="checkbox" id="setting-debug-mode">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Settings View Styles */
+    .settings-container {
+        display: none;
+        /* Hidden by default for logic control */
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 24px;
+        max-width: 100%;
+    }
+
+    .settings-container.active {
+        display: grid;
+    }
+
+    /* Tabs */
+    .tabs-nav {
+        display: flex;
+        gap: 16px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0;
+        margin-bottom: 24px;
+    }
+
+    .tab-btn {
+        background: none;
+        border: none;
+        padding: 8px 16px;
+        font-weight: 500;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+        color: var(--primary);
+    }
+
+    .tab-btn.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+
+    /* Existing Styles */
+    .mb-4 {
+        margin-bottom: 2rem;
+    }
+
+    .text-xs {
+        font-size: 0.75rem;
+    }
+
+    .text-sm {
+        font-size: 0.875rem;
+    }
+
+    .mt-1 {
+        margin-top: 4px;
+    }
+
+    .card-title.text-danger {
+        color: var(--error);
+    }
+
+    .align-center {
+        align-items: center;
+    }
+
+    .flex-row {
+        display: flex;
+        gap: 16px;
+    }
+
+    .flex-1 {
+        flex: 1;
+    }
+
+    .w-auto {
+        width: auto;
+    }
+
+    .divider {
+        border: 0;
+        border-top: 1px solid var(--border);
+        margin: 16px 0;
+    }
+
+    /* Switch */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+    }
+
+    input:checked+.slider {
+        background-color: var(--primary);
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(24px);
+    }
+
+    .slider.round {
+        border-radius: 24px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+    /* Payment Specific */
+    .payment-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 16px;
+        background: var(--surface);
+    }
+
+    .payment-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        object-fit: contain;
+        background: #fff;
+        border: 1px solid #eee;
+        padding: 4px;
+    }
+
+    .payment-content {
+        flex: 1;
+    }
+
+    .payment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .payment-title {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .payment-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--border);
+    }
+
+    .payment-inputs.hidden {
+        display: none;
+    }
+
+    .badge-test {
+        background: #fef3c7;
+        color: #d97706;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-left: 8px;
+    }
+
+    /* Thermal Receipt Preview */
+    .thermal-receipt {
+        background: white;
+        padding: 15px;
+        width: 100%;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        font-family: 'Courier New', Courier, monospace;
+        color: black;
+        box-sizing: border-box;
+    }
+</style>

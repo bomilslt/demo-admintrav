@@ -1,0 +1,32 @@
+<div class="view-header">
+    <h1>Gestion des Remboursements</h1>
+</div>
+
+<div class="content-card">
+    <div class="table-actions">
+        <!-- Optional global actions -->
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Réf</th>
+                <th>Passager</th>
+                <th>Montant</th>
+                <th>Date Demande</th> <!-- Ideally we track request date, but createdAt will do or we assume recent -->
+                <th>Départ</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="refunds-table">
+            <tr>
+                <td colspan="7" class="loading-cell">Chargement...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="pagination-controls" class="pagination">
+        <!-- populated by js -->
+    </div>
+</div>
