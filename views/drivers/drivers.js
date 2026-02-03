@@ -20,7 +20,17 @@ export async function init() {
     setupExports();
 }
 
-// ... setupExports ...
+function setupExports() {
+    const btnExportExcel = document.getElementById('btn-export-excel');
+    if (btnExportExcel) {
+        btnExportExcel.addEventListener('click', () => exportToExcel(allDrivers, 'drivers-export'));
+    }
+
+    const btnExportPdf = document.getElementById('btn-export-pdf');
+    if (btnExportPdf) {
+        btnExportPdf.addEventListener('click', () => exportToPDF(allDrivers, 'drivers-export', ['name', 'phone', 'license', 'status', 'rating']));
+    }
+}
 
 async function setupAgencySelector() {
     const headerActions = document.querySelector('.page-header .header-actions');
