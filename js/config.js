@@ -13,5 +13,10 @@ export const CONFIG = {
     ENABLE_DEBUG_LOGS: false,
 
     // Branding
-    APP_NAME: 'INTERCITY Admin'
+    // Branding
+    APP_NAME: 'INTERCITY Admin',
+
+    // Mapbox
+    mapboxToken: 'pk.eyJ1IjoiZnJhbmNreWJvbWlsIiwiYSI6ImNta3FyZXV3bjBzOHczZHM5MHE4d3JiNXkifQ.kR4yphckwo9oixIHHMRPHg',
+    currentMapStyle: 'mapbox://styles/mapbox/streets-v12'
 };
