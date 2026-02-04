@@ -6,18 +6,16 @@
  */
 
 export const CONFIG = {
-    // API Base URL (Change this for production)
-    // API_URL: 'https://perpetual-empathy-production-e519.up.railway.app/api',
-    API_URL: 'http://localhost:5000/api',
+    API_URL: 'https://perpetual-empathy-production-e519.up.railway.app/api',
+    // API_URL: 'http://localhost:5000/api',
 
     // Feature Flags
     ENABLE_DEBUG_LOGS: false,
 
     // Branding
-    // Branding
     APP_NAME: 'INTERCITY Admin',
 
     // Mapbox
     mapboxToken: 'pk.eyJ1IjoiZnJhbmNreWJvbWlsIiwiYSI6ImNta3FyZXV3bjBzOHczZHM5MHE4d3JiNXkifQ.kR4yphckwo9oixIHHMRPHg',
-    currentMapStyle: 'mapbox://styles/mapbox/streets-v12'
+    currentMapStyle: 'mapbox://styles/franckybomil/cmkqtx5wh005h01qxf3xt33yl'
 };
