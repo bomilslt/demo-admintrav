@@ -54,14 +54,25 @@ async function loadGlobalConfig() {
             if (config.refundDeadlineHours !== undefined) {
                 setVal('setting-refund-deadline', config.refundDeadlineHours);
             }
+            if (config.refundPenaltyPercent !== undefined) {
+                setVal('setting-refund-penalty', config.refundPenaltyPercent);
+            }
             if (config.companyName) {
                 setVal('setting-app-name', config.companyName);
+            }
+            if (config.supportEmail) {
+                setVal('setting-support-email', config.supportEmail);
+            }
+            if (config.supportPhone) {
+                setVal('setting-support-phone', config.supportPhone);
             }
         }
     } catch (e) {
         console.error("Failed to load global config:", e);
     }
 }
+
+
 
 function setupTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
@@ -376,7 +387,10 @@ async function saveAll() {
         // 4. Save Global Config (Refund Deadline & Company Name)
         const globalPayload = {
             companyName: getVal('setting-app-name'),
-            refundDeadlineHours: parseInt(getVal('setting-refund-deadline')) || 24
+            supportEmail: getVal('setting-support-email'),
+            supportPhone: getVal('setting-support-phone'),
+            refundDeadlineHours: parseInt(getVal('setting-refund-deadline')) || 24,
+            refundPenaltyPercent: parseInt(getVal('setting-refund-penalty')) || 0
         };
 
         // 5. Save Notification Config
@@ -441,7 +455,7 @@ function loadSettings() {
     };
 
     // setVal('setting-app-name', settings.appName); // Handled by loadGlobalConfig
-    setVal('setting-support-email', settings.supportEmail);
+    // setVal('setting-support-email', settings.supportEmail); // Handled by loadGlobalConfig
     setVal('setting-tax-rate', settings.taxRate);
     setVal('setting-stamp-fee', settings.stampFee);
     setVal('setting-cancellation-window', settings.cancellationWindow);

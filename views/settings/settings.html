@@ -38,7 +38,11 @@
                     </div>
                     <div class="form-section">
                         <label>Email de support</label>
-                        <input type="email" class="form-input" id="setting-support-email" value="support@intercity.com">
+                        <input type="email" class="form-input" id="setting-support-email" value="admin@intercity.com">
+                    </div>
+                    <div class="form-section">
+                        <label>Numéro de support</label>
+                        <input type="tel" class="form-input" id="setting-support-phone" value="688090632">
                     </div>
                 </div>
                 <div class="form-row">
@@ -100,6 +104,13 @@
                         Si un client annule avant ce délai, le billet est éligible au remboursement.<br>
                         <strong>Exemple :</strong> Si le départ est à 10h00 et le délai est de 24h, le client doit
                         annuler avant la veille 10h00 pour être remboursé.
+                    </p>
+                </div>
+                <div class="form-section mt-4">
+                    <label>Pénalité d'annulation (%)</label>
+                    <input type="number" class="form-input" id="setting-refund-penalty" value="10" min="0" max="100">
+                    <p class="text-xs text-muted mt-1">
+                        Pourcentage retenu sur le montant du remboursement.
                     </p>
                 </div>
             </div>
