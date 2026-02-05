@@ -1,4 +1,4 @@
-import { getEmployees, getDrivers, createEmployee, updateEmployee, deleteEmployee, getAgencies, getVehicles } from '../../js/services/api.js';
+import { getEmployees, getDrivers, createEmployee, updateEmployee, deleteEmployee, createDriver, updateDriver, deleteDriver, getAgencies, getVehicles } from '../../js/services/api.js';
 import { createAgencySelector, getDefaultAgencyId } from '../../js/components/agency-selector.js';
 import { isSuperAdmin, isManager } from '../../js/utils/user-state.js';
 
@@ -411,8 +411,12 @@ window.editEmployee = function (id) {
 window.deleteEmployee = async function (id) {
     if (!confirm('Supprimer cet employé ?')) return;
     try {
-        await deleteEmployee(id);
-        window.showAlert('Succès', 'Employé supprimé', 'success');
+        if (id.startsWith('drv-')) {
+            await deleteDriver(id);
+        } else {
+            await deleteEmployee(id);
+        }
+        window.showAlert('Succès', 'Supprimé', 'success');
         clearEmployeeCache(); // Invalidate
         loadData();
     } catch (e) {
@@ -514,10 +518,18 @@ async function handleSaveEmployee() {
         btn.textContent = '...';
 
         if (id) {
-            await updateEmployee(id, payload);
+            if (role === 'driver' || id.startsWith('drv-')) {
+                await updateDriver(id, payload);
+            } else {
+                await updateEmployee(id, payload);
+            }
             window.showAlert('Succès', 'Modifié', 'success');
         } else {
-            await createEmployee(payload);
+            if (role === 'driver') {
+                await createDriver(payload);
+            } else {
+                await createEmployee(payload);
+            }
             window.showAlert('Succès', 'Créé', 'success');
         }
 
