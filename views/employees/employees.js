@@ -12,6 +12,7 @@ let state = {
 
 export function init() {
     console.log('[Phase 4] Init - CRUD Ready');
+    clearEmployeeCache(); // Force refresh on load to prevent stale empty states
 
     // Reset State
     state = { employees: [], agencyId: null, filter: 'all', search: '' };
@@ -147,11 +148,12 @@ async function loadData() {
 
     // 1. Try Cache
     const cachedData = loadFromCache(state.agencyId);
-    if (cachedData) {
+    if (cachedData && cachedData.length > 0) {
         state.employees = cachedData;
         render(); // Instant render
         return;
     }
+    // If cache is empty or null, continue to fetch
 
     if (state.employees.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">Chargement des équipes...</td></tr>';
