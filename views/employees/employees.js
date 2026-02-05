@@ -1,4 +1,4 @@
-import { getEmployees, getDrivers, createEmployee, updateEmployee, deleteEmployee, getAgencies } from '../../js/services/api.js';
+import { getEmployees, getDrivers, createEmployee, updateEmployee, deleteEmployee, getAgencies, getVehicles } from '../../js/services/api.js';
 import { createAgencySelector, getDefaultAgencyId } from '../../js/components/agency-selector.js';
 import { isSuperAdmin, isManager } from '../../js/utils/user-state.js';
 
@@ -326,8 +326,11 @@ window.openEmployeeModal = async function (employeeId = null) {
     document.querySelectorAll('#modal-employee select').forEach(s => s.value = '');
     document.getElementById('driver-fields').style.display = 'none';
 
-    // Populate Agency Select
-    await populateAgencyOptions();
+    // Populate Agency & Vehicle Selects
+    await Promise.all([
+        populateAgencyOptions(),
+        loadVehiclesIntoModal()
+    ]);
 
     if (employeeId) {
         // Edit Mode
@@ -344,6 +347,11 @@ window.openEmployeeModal = async function (employeeId = null) {
             // Set agency directly (options are loaded)
             const agencyVal = emp.agency_id || emp.agencyId || '';
             document.getElementById('employee-agency').value = agencyVal;
+
+            if (emp.role === 'driver') {
+                document.getElementById('employee-license').value = emp.license || '';
+                document.getElementById('employee-vehicle').value = emp.preferredVehicleId || '';
+            }
         }
     } else {
         // Add Mode
@@ -486,11 +494,18 @@ async function handleSaveEmployee() {
         payload.agencyId = checked[0]; // Primary
     } else {
         const agId = document.getElementById('employee-agency').value;
-        if (!agId) {
+        if (!agId && role !== 'driver') {
             window.showAlert('Erreur', 'Agence requise', 'error');
             return;
         }
-        payload.agencyId = agId;
+        payload.agencyId = agId || null;
+    }
+
+    // Handle Driver Specifics
+    if (role === 'driver') {
+        payload.license = document.getElementById('employee-license').value;
+        const vehId = document.getElementById('employee-vehicle').value;
+        if (vehId) payload.preferredVehicleId = vehId;
     }
 
     try {
