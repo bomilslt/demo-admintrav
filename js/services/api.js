@@ -30,7 +30,7 @@ function getHeaders() {
     const token = localStorage.getItem('adminToken');
     return {
         'Content-Type': 'application/json',
-        'X-Tenant-ID': 'tenant-default-001',
+        'X-Tenant-ID': CONFIG.TENANT_ID,
         'Authorization': token ? `Bearer ${token}` : ''
     };
 }
