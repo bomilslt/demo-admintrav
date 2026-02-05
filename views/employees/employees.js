@@ -591,3 +591,24 @@ async function loadAgenciesIntoModal() {
         console.error('Failed to load modal agencies', e);
     }
 }
+
+async function loadVehiclesIntoModal() {
+    const select = document.getElementById('employee-vehicle');
+    if (!select) return;
+
+    try {
+        // Fetch only active vehicles
+        const vehicles = await getVehicles({ status: 'active' });
+        const list = Array.isArray(vehicles) ? vehicles : (vehicles.data || []);
+
+        const currentVal = select.value;
+        select.innerHTML = '<option value="">Aucun</option>' +
+            list.map(v => `<option value="${v.id}">${v.model} (${v.plate})</option>`).join('');
+
+        if (currentVal) select.value = currentVal;
+
+    } catch (e) {
+        console.warn('Failed to load vehicles', e);
+        select.innerHTML = '<option value="">Erreur chargement</option>';
+    }
+}
