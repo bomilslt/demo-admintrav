@@ -41,9 +41,13 @@ export async function apiCall(endpoint, options = {}) {
         throw new Error('Mock mode - this should not be called');
     }
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const headers = getHeaders();
+    console.log(`[API] Fetching: ${url}`, headers);
+
+    const response = await fetch(url, {
         ...options,
-        headers: getHeaders()
+        headers: headers
     });
 
     if (!response.ok) {
