@@ -11,7 +11,7 @@ import { createEmployeeSelector } from '../../js/utils/employee-selector.js';
 import { Cache } from '../../js/services/cache.js';
 
 let allBookings = [];
-let currentFilter = 'all';
+let currentFilter = 'valid';
 let currentChannelFilter = 'all'; // Sale channel filter
 let searchTimeout = null;
 let bookingToCancel = null;

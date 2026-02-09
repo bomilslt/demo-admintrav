@@ -51,6 +51,14 @@ export async function apiCall(endpoint, options = {}) {
     });
 
     if (!response.ok) {
+        if (response.status === 401) {
+            console.warn('[API] Session expired (401). Redirecting...');
+            localStorage.removeItem('adminToken');
+            window.location.href = '../../../index.html'; // Assuming relative path from views/x/y
+            // Ideally use a global logout function or event, but direct redirect is safest here
+            throw new Error('Session expirée');
+        }
+
         let errorMessage = `API Error: ${response.status}`;
         try {
             const errorData = await response.json();
