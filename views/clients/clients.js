@@ -10,8 +10,13 @@ export function init() {
 }
 
 function loadClients() {
-    // Basic list, no complex filters yet
-    Cache.swr('all_clients', getClients, renderClients);
+    Cache.swr('all_clients', getClients, handleClientsResponse);
+}
+
+function handleClientsResponse(response) {
+    // Support both paginated { data, pagination } and plain array
+    const clients = Array.isArray(response) ? response : (response.data || []);
+    renderClients(clients);
 }
 
 function renderClients(clients) {

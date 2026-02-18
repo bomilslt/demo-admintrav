@@ -2,6 +2,7 @@
  * Settings View
  */
 import { API_BASE_URL } from '../../js/services/api.js';
+import { CONFIG } from '../../js/config.js';
 import { isSuperAdmin } from '../../js/utils/user-state.js';
 
 // Re-using common API helper logic or direct fetch for specific config
@@ -10,7 +11,7 @@ function apiCall(endpoint, method = 'GET', body = null) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': token ? `Bearer ${token}` : '',
-        'X-Tenant-ID': 'tenant-default-001'
+        'X-Tenant-ID': CONFIG.TENANT_ID
     };
 
     const config = { method, headers };
@@ -404,13 +405,18 @@ async function saveAll() {
             smtpPassword: getVal('notif-smtp-pass'),
             smtpUseTls: document.getElementById('notif-smtp-tls').checked,
             smtpFromEmail: getVal('notif-smtp-from'),
-            awsAccessKey: getVal('notif-aws-key'),
-            awsSecretKey: getVal('notif-aws-secret'),
             awsRegion: getVal('notif-aws-region'),
             smsActive: document.getElementById('notif-sms-active').checked,
             smsProvider: getVal('notif-sms-provider'),
-            smsApiKey: getVal('notif-sms-key')
         };
+
+        // Only send keys if user actually changed them (masked values start with ****)
+        const awsKey = getVal('notif-aws-key');
+        if (awsKey && !awsKey.startsWith('****')) notifPayload.awsAccessKey = awsKey;
+        const awsSecret = getVal('notif-aws-secret');
+        if (awsSecret && !awsSecret.startsWith('****')) notifPayload.awsSecretKey = awsSecret;
+        const smsKey = getVal('notif-sms-key');
+        if (smsKey && !smsKey.startsWith('****')) notifPayload.smsApiKey = smsKey;
 
         await Promise.all([
             ...paymentPromises,

@@ -119,6 +119,23 @@ export function init(params) {
     setupPrintButton();
 }
 
+/**
+ * Reload all departure data (info + manifest + parcels) after a mutation.
+ * Replaces the old loadDeparture() that was removed during SWR refactor.
+ */
+function reloadAll() {
+    if (!currentDeparture) return;
+    const id = currentDeparture.id;
+
+    // Clear relevant caches so SWR fetches fresh data
+    Cache.clear(`departure_${id}`);
+    Cache.clear(`departure_manifest_${id}`);
+    Cache.clear(`departure_parcels_${id}`);
+
+    // Re-init everything
+    init([id]);
+}
+
 function setupPrintButton() {
     const btnPrint = document.getElementById('btn-print-manifest');
     if (btnPrint) {
@@ -349,7 +366,7 @@ function renderManifest() {
                 try {
                     await updateBookingStatus(btn.dataset.id, 'confirmed');
                     window.showAlert('Succès', 'Passager restauré', 'success');
-                    loadDeparture(currentDeparture.id);
+                    reloadAll();
                 } catch (e) {
                     window.showAlert('Erreur', e.message, 'error');
                 }
@@ -364,7 +381,7 @@ function renderManifest() {
                 try {
                     await deleteBooking(btn.dataset.id);
                     window.showAlert('Succès', 'Passager supprimé', 'success');
-                    loadDeparture(currentDeparture.id);
+                    reloadAll();
                 } catch (e) {
                     window.showAlert('Erreur', e.message, 'error');
                 }
@@ -505,7 +522,7 @@ async function updateStatus(newStatus) {
         await updateDeparture(currentDeparture.id, { status: newStatus });
 
         // Refresh data
-        await loadDeparture(currentDeparture.id);
+        await reloadAll();
 
         const label = newStatus === 'in_progress' ? 'Trajet démarré' : 'Trajet terminé';
         // Use standard alert if available, or just console
@@ -592,7 +609,7 @@ function setupModalEvents() {
                 });
 
                 // Optimistic Update or Refresh
-                await loadDeparture(currentDeparture.id);
+                await reloadAll();
 
                 if (sellModal) sellModal.classList.remove('active');
                 window.showAlert('Succès', 'Billet émis et enregistré', 'success');
@@ -686,7 +703,7 @@ function setupModalEvents() {
                     description: description
                 });
 
-                await loadDeparture(currentDeparture.id);
+                await reloadAll();
 
                 if (parcelModal) parcelModal.classList.remove('active');
                 window.showAlert('Succès', 'Colis enregistré', 'success');

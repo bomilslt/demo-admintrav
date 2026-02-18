@@ -43,7 +43,6 @@ export async function apiCall(endpoint, options = {}) {
 
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = getHeaders();
-    console.log(`[API] Fetching: ${url}`, headers);
 
     const response = await fetch(url, {
         ...options,
@@ -54,9 +53,12 @@ export async function apiCall(endpoint, options = {}) {
         if (response.status === 401) {
             console.warn('[API] Session expired (401). Redirecting...');
             localStorage.removeItem('adminToken');
-            window.location.href = '../../../index.html'; // Assuming relative path from views/x/y
-            // Ideally use a global logout function or event, but direct redirect is safest here
+            window.location.href = '../../../index.html';
             throw new Error('Session expirée');
+        }
+
+        if (response.status === 403) {
+            throw new Error('Accès refusé — permissions insuffisantes');
         }
 
         let errorMessage = `API Error: ${response.status}`;
@@ -187,10 +189,6 @@ const mockClients = [
     { id: 'cl-003', name: 'Mpessa Etienne', phone: '+237 699 99 99 99', bookings: 5, totalSpent: 45000, createdAt: '2025-10-10' },
     { id: 'cl-004', name: 'Dax Moli', phone: '+237 699 99 99 99', bookings: 23, totalSpent: 267000, createdAt: '2025-03-01' }
 ];
-
-// ============================================================================
-// API FUNCTIONS - STATS
-// ============================================================================
 
 // ============================================================================
 // API FUNCTIONS - STATS
@@ -432,12 +430,10 @@ export async function refundBooking(bookingId) {
 export async function getClients(filters = {}) {
     if (USE_MOCK_DATA) {
         await delay(300);
-        return [...mockClients];
+        return { data: [...mockClients], pagination: { page: 1, limit: 50, total: mockClients.length, pages: 1 } };
     }
     const params = new URLSearchParams(filters).toString();
-    // Clients not implemented in backend yet, using mock approach or empty
-    // return apiCall(`/clients?${params}`);
-    return [];
+    return apiCall(`/clients?${params}`);
 }
 
 export async function getClientById(id) {
@@ -445,8 +441,7 @@ export async function getClientById(id) {
         await delay(200);
         return mockClients.find(c => c.id === id) || null;
     }
-    // return apiCall(`/clients/${id}`);
-    return null;
+    return apiCall(`/clients/${id}`);
 }
 
 // ============================================================================
