@@ -19,7 +19,7 @@ export const CONFIG = {
     // Branding
     APP_NAME: 'INTERCITY Admin',
 
-    // Mapbox — Set via window.ENV.MAPBOX_TOKEN in production
-    mapboxToken: ENV.MAPBOX_TOKEN || 'pk.eyJ1IjoiZnJhbmNreWJvbWlsIiwiYSI6ImNta3FyZXV3bjBzOHczZHM5MHE4d3JiNXkifQ.kR4yphckwo9oixIHHMRPHg',
+    // Mapbox — MUST be set via window.ENV.MAPBOX_TOKEN (never commit tokens to repo)
+    mapboxToken: ENV.MAPBOX_TOKEN || '',
     currentMapStyle: ENV.MAPBOX_STYLE || 'mapbox://styles/franckybomil/cmkqtx5wh005h01qxf3xt33yl'
 };

@@ -189,6 +189,8 @@ function openDriverModal(driverId = null) {
     document.getElementById('driver-license').value = '';
     document.getElementById('driver-status').value = 'available';
     document.getElementById('driver-exp').value = '2';
+    document.getElementById('driver-email').value = '';
+    document.getElementById('driver-password').value = '';
 
     if (driverId) {
         const d = allDrivers.find(drv => drv.id === driverId);
@@ -199,6 +201,7 @@ function openDriverModal(driverId = null) {
             document.getElementById('driver-phone').value = d.phone;
             document.getElementById('driver-license').value = d.license || '';
             document.getElementById('driver-status').value = d.status;
+            document.getElementById('driver-email').value = d.email || '';
         }
     } else {
         title.textContent = 'Nouveau Chauffeur';
@@ -212,10 +215,18 @@ async function saveDriver() {
         name: document.getElementById('driver-name').value,
         phone: document.getElementById('driver-phone').value,
         license: document.getElementById('driver-license').value,
-        status: document.getElementById('driver-status').value, // 'available' or 'offline' mostly
-        rating: 5.0, // Default
+        status: document.getElementById('driver-status').value,
+        email: document.getElementById('driver-email').value,
+        rating: 5.0,
         trips: 0
     };
+
+    // Only send password if provided
+    const password = document.getElementById('driver-password').value.trim();
+    if (password) {
+        data.password = password;
+        data.adminReset = true; // Signal backend: admin is force-resetting
+    }
 
     if (!data.name || !data.phone) {
         window.showAlert('Erreur', 'Nom et téléphone obligatoires', 'error');

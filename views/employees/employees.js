@@ -249,8 +249,8 @@ function render() {
             <td>
                 <div class="action-buttons">
                     ${emp.isFleet ?
-            `<button class="btn-icon" title="Géré dans Flotte" disabled style="opacity:0.5;cursor:not-allowed">
-                            <svg class="icon-svg" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            `<button class="btn-icon" onclick="window.editEmployee('${emp.id}')" title="Modifier le chauffeur">
+                            <svg class="icon-svg" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </button>`
             :
             `<button class="btn-icon" onclick="window.editEmployee('${emp.id}')" title="Modifier">

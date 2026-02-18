@@ -6,11 +6,21 @@ import { getClients } from '../../js/services/api.js';
 import { Cache } from '../../js/services/cache.js';
 
 export function init() {
-    loadClients(); // SWR
+    Cache.clear('all_clients'); // Force fresh fetch
+    loadClients();
 }
 
-function loadClients() {
-    Cache.swr('all_clients', getClients, handleClientsResponse);
+async function loadClients() {
+    const tbody = document.getElementById('clients-table');
+
+    try {
+        await Cache.swr('all_clients', getClients, handleClientsResponse);
+    } catch (e) {
+        console.error('[Clients] Load failed:', e);
+        if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--danger)">Erreur chargement clients: ${e.message}</td></tr>`;
+        }
+    }
 }
 
 function handleClientsResponse(response) {
