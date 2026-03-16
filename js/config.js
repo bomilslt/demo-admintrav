@@ -10,7 +10,7 @@ const ENV = window.ENV || {};
 
 export const CONFIG = {
     TENANT_ID: 'tenant-default-001',
-    API_URL: ENV.API_URL || 'https://perpetual-empathy-production-e519.up.railway.app/api',
+    API_URL: window.ENV?.API_URL || 'http://localhost:5000/api',
     // API_URL: 'http://localhost:5000/api',
 
     // Feature Flags
