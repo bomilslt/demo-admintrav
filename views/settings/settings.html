@@ -170,6 +170,7 @@
                         <select class="form-select" id="notif-email-provider" onchange="window.toggleEmailSettings()">
                             <option value="smtp">SMTP (Gmail, Outlook, Hébergeur)</option>
                             <option value="ses">Amazon SES</option>
+                            <option value="mailgun">Mailgun</option>
                         </select>
                     </div>
                 </div>
@@ -229,7 +230,26 @@
                     </div>
                 </div>
 
-                <hr class="divider">
+                <!-- MAILGUN SETTINGS -->
+                <div id="mailgun-settings" class="email-settings-group" style="display:none;">
+                    <h5 class="mb-2">Configuration Mailgun</h5>
+                    <div class="form-row">
+                        <div class="form-section">
+                            <label>API Key Mailgun</label>
+                            <input type="password" class="form-input" id="notif-mailgun-key" placeholder="key-xxxxxxxxxxxxxxxx">
+                            <p class="text-xs text-muted mt-1">Depuis le dashboard Mailgun → Account → API Keys</p>
+                        </div>
+                        <div class="form-section">
+                            <label>Domaine Mailgun</label>
+                            <input type="text" class="form-input" id="notif-mailgun-domain" placeholder="mg.intercity.com">
+                            <p class="text-xs text-muted mt-1">Votre domaine configuré dans Mailgun</p>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <label>Email Expéditeur</label>
+                        <input type="email" class="form-input" id="notif-mailgun-from" placeholder="no-reply@mg.intercity.com">
+                    </div>
+                </div>
 
                 <!-- SMS SECTION -->
                 <div class="form-section">

@@ -528,27 +528,25 @@ function renderStats(meta) {
     };
 
     const pending = allParcels.filter(p => p.status === 'pending').length;
-    const transit = allParcels.filter(p => p.status === 'transit').length;
+    const transit = allParcels.filter(p => p.status === 'transit' || p.status === 'in_transit').length;
     const delivered = allParcels.filter(p => p.status === 'delivered').length;
-
-    // Use backend split revenue
-    let collectedRevenue = 0;
-
-    if (meta && meta.collected_revenue !== undefined) {
-        collectedRevenue = meta.collected_revenue;
-    } else if (meta && meta.total_revenue !== undefined) {
-        // Fallback 
-        collectedRevenue = meta.total_revenue;
-    } else {
-        collectedRevenue = allParcels.reduce((sum, p) => sum + p.price, 0);
-    }
 
     setText('stat-pending', pending);
     setText('stat-transit', transit);
     setText('stat-delivered', delivered);
 
-    // Only show collected revenue (Cash in hand)
-    setText('stat-revenue-collected', formatCompact(collectedRevenue));
+    // Revenue: only show figures for own-agency parcels
+    // Backend returns collected_revenue = own-agency only for colis role
+    if (meta && meta.collected_revenue !== undefined) {
+        const el = document.getElementById('stat-revenue-collected');
+        if (el) el.textContent = formatCompact(meta.collected_revenue);
+    } else {
+        const ownTotal = allParcels
+            .filter(p => p.isOwnAgency !== false)  // include if flag absent (non-colis roles)
+            .reduce((sum, p) => sum + (p.price || 0), 0);
+        const el = document.getElementById('stat-revenue-collected');
+        if (el) el.textContent = formatCompact(ownTotal);
+    }
 }
 
 function renderTable() {
@@ -563,8 +561,27 @@ function renderTable() {
     // No client-side filtering needed here as API filters everything
     // Except maybe search highlight?
 
-    tbody.innerHTML = allParcels.map(p => `
-        <tr>
+    tbody.innerHTML = allParcels.map(p => {
+        const isReadOnly = p.readOnly === true;
+        const priceCell = isReadOnly
+            ? `<td><span style="color:var(--text-muted);font-size:0.8rem;font-style:italic;">-</span></td>`
+            : `<td>${formatPrice(p.price)}</td>`;
+        const agencyBadge = isReadOnly
+            ? `<span style="font-size:0.7rem;background:var(--surface-hover);color:var(--text-muted);padding:2px 6px;border-radius:4px;margin-left:4px;">Lecture seule</span>`
+            : '';
+        const actionBtns = isReadOnly
+            ? `<button class="btn-icon" onclick="window.viewParcel('${p.id}')" title="Consulter">
+                <svg class="icon-svg" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+               </button>`
+            : `<button class="btn-icon" onclick="window.viewParcel('${p.id}')" title="Détails">
+                <svg class="icon-svg" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+               </button>
+               ${p.status !== 'delivered' ? `<button class="btn-icon" onclick="window.markDelivered('${p.id}')" title="Livré">
+                <svg class="icon-svg" style="width:16px;height:16px;color:green" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+               </button>` : ''}`;
+
+        return `
+        <tr style="${isReadOnly ? 'opacity:0.85;background:var(--surface-alt,inherit);' : ''}">
             <td><span class="parcel-id">${p.id.substring(0, 10)}...</span></td>
             <td>
                 <div class="contact-cell">
@@ -580,26 +597,18 @@ function renderTable() {
             </td>
             <td>
                 <div class="route-cell">
-                    ${p.origin} → ${p.destination}
+                    ${p.origin} → ${p.destination}${agencyBadge}
                 </div>
-                <div class="text-xs text-muted">${p.departureName || '-'}</div>
+                <div class="text-xs text-muted">${p.registeredBy?.agency || '-'}</div>
             </td>
-            <td>${formatPrice(p.price)}</td>
+            ${priceCell}
             <td><span class="status-pill ${p.status}">${getStatusLabel(p.status)}</span></td>
             <td>${formatDate(p.createdAt)}</td>
             <td>
-                <div class="action-buttons">
-                    <button class="btn-icon" onclick="window.viewParcel('${p.id}')" title="Détails">
-                        <svg class="icon-svg" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    </button>
-                    ${p.status !== 'delivered' ?
-            `<button class="btn-icon" onclick="window.markDelivered('${p.id}')" title="Livré">
-                            <svg class="icon-svg" style="width:16px;height:16px;color:green" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        </button>` : ''}
-                </div>
+                <div class="action-buttons">${actionBtns}</div>
             </td>
-        </tr>
-    `).join('');
+        </tr>`;
+    }).join('');
 }
 
 // ============================================================================
@@ -646,7 +655,12 @@ function openParcelDetail(parcelId) {
 
     const btnDelivered = document.getElementById('btn-mark-delivered');
     if (btnDelivered) {
-        btnDelivered.style.display = selectedParcel.status !== 'delivered' ? 'flex' : 'none';
+        const canAct = selectedParcel.status !== 'delivered' && !selectedParcel.readOnly;
+        btnDelivered.style.display = canAct ? 'flex' : 'none';
+    }
+    const btnTransfer = document.getElementById('btn-transfer-action');
+    if (btnTransfer) {
+        btnTransfer.style.display = selectedParcel.readOnly ? 'none' : 'flex';
     }
 
     document.getElementById('modal-parcel-detail').classList.add('active');

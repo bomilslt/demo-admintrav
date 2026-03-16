@@ -294,14 +294,11 @@ window.toggleEmailSettings = () => {
     const provider = document.getElementById('notif-email-provider').value;
     const smtp = document.getElementById('smtp-settings');
     const ses = document.getElementById('ses-settings');
+    const mailgun = document.getElementById('mailgun-settings');
 
-    if (provider === 'smtp') {
-        if (smtp) smtp.style.display = 'block';
-        if (ses) ses.style.display = 'none';
-    } else {
-        if (smtp) smtp.style.display = 'none';
-        if (ses) ses.style.display = 'block';
-    }
+    if (smtp) smtp.style.display = provider === 'smtp' ? 'block' : 'none';
+    if (ses) ses.style.display = provider === 'ses' ? 'block' : 'none';
+    if (mailgun) mailgun.style.display = provider === 'mailgun' ? 'block' : 'none';
 };
 
 async function loadNotificationConfig() {
@@ -331,6 +328,11 @@ async function loadNotificationConfig() {
         setVal('notif-aws-key', config.awsAccessKey);
         setVal('notif-aws-region', config.awsRegion);
 
+        // Mailgun
+        setVal('notif-mailgun-key', config.mailgunApiKey);
+        setVal('notif-mailgun-domain', config.mailgunDomain);
+        setVal('notif-mailgun-from', config.mailgunFromEmail);
+
         // SMS
         if (document.getElementById('notif-sms-active'))
             document.getElementById('notif-sms-active').checked = config.smsActive;
@@ -339,7 +341,7 @@ async function loadNotificationConfig() {
         if (document.getElementById('notif-sms-key'))
             setVal('notif-sms-key', config.smsApiKey);
 
-        window.toggleEmailSettings(); // Set initial state
+        window.toggleEmailSettings(); // Set initial visibility
 
     } catch (e) {
         console.error("Failed to load notifications config", e);
@@ -396,25 +398,29 @@ async function saveAll() {
 
         // 5. Save Notification Config
         const notifPayload = {
-            otpActive: document.getElementById('notif-otp-active').checked,
-            emailActive: document.getElementById('notif-email-active').checked,
+            otpActive: document.getElementById('notif-otp-active')?.checked ?? false,
+            emailActive: document.getElementById('notif-email-active')?.checked ?? false,
             emailProvider: getVal('notif-email-provider'),
             smtpHost: getVal('notif-smtp-host'),
             smtpPort: getVal('notif-smtp-port'),
             smtpUser: getVal('notif-smtp-user'),
             smtpPassword: getVal('notif-smtp-pass'),
-            smtpUseTls: document.getElementById('notif-smtp-tls').checked,
+            smtpUseTls: document.getElementById('notif-smtp-tls')?.checked ?? true,
             smtpFromEmail: getVal('notif-smtp-from'),
             awsRegion: getVal('notif-aws-region'),
-            smsActive: document.getElementById('notif-sms-active').checked,
+            mailgunDomain: getVal('notif-mailgun-domain'),
+            mailgunFromEmail: getVal('notif-mailgun-from'),
+            smsActive: document.getElementById('notif-sms-active')?.checked ?? false,
             smsProvider: getVal('notif-sms-provider'),
         };
 
-        // Only send keys if user actually changed them (masked values start with ****)
+        // Only send masked keys if they were actually changed
         const awsKey = getVal('notif-aws-key');
         if (awsKey && !awsKey.startsWith('****')) notifPayload.awsAccessKey = awsKey;
         const awsSecret = getVal('notif-aws-secret');
         if (awsSecret && !awsSecret.startsWith('****')) notifPayload.awsSecretKey = awsSecret;
+        const mailgunKey = getVal('notif-mailgun-key');
+        if (mailgunKey && !mailgunKey.startsWith('****')) notifPayload.mailgunApiKey = mailgunKey;
         const smsKey = getVal('notif-sms-key');
         if (smsKey && !smsKey.startsWith('****')) notifPayload.smsApiKey = smsKey;
 

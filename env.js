@@ -11,3 +11,4 @@ window.ENV = {
     MAPBOX_TOKEN: 'pk.eyJ1IjoiZnJhbmNreWJvbWlsIiwiYSI6ImNta3FyZXV3bjBzOHczZHM5MHE4d3JiNXkifQ.kR4yphckwo9oixIHHMRPHg',
     MAPBOX_STYLE: 'mapbox://styles/franckybomil/cmkqtx5wh005h01qxf3xt33yl'
 };
+
