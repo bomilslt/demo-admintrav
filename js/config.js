@@ -8,9 +8,13 @@
 // Mapbox token should be set via environment config (e.g. window.ENV injected at build/deploy)
 const ENV = window.ENV || {};
 
+let _apiUrl = window.ENV?.API_URL || 'http://localhost:5000/api';
+if (_apiUrl.endsWith('/')) _apiUrl = _apiUrl.slice(0, -1);
+if (!_apiUrl.endsWith('/api') && window.ENV?.API_URL) _apiUrl += '/api';
+
 export const CONFIG = {
     TENANT_ID: 'tenant-default-001',
-    API_URL: window.ENV?.API_URL || 'http://localhost:5000/api',
+    API_URL: _apiUrl,
     // API_URL: 'http://localhost:5000/api',
 
     // Feature Flags
