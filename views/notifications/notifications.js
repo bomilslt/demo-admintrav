@@ -14,7 +14,9 @@ export async function init() {
 }
 
 async function loadNotifications() {
-    allNotifications = await getNotifications();
+    const result = await getNotifications();
+    // API may return a plain array or a paginated object {items: [], total: N}
+    allNotifications = Array.isArray(result) ? result : (result?.items || result?.data || []);
     renderList();
 }
 

@@ -241,9 +241,9 @@ function render() {
             <td>
                 <div class="performance-bar">
                     <div class="perf-bar-bg">
-                        <div class="perf-bar-fill ${getPerformanceClass(emp.performance)}" style="width: ${emp.performance}%"></div>
+                        <div class="perf-bar-fill ${getPerformanceClass(emp.performance ?? 0)}" style="width: ${emp.performance ?? 0}%"></div>
                     </div>
-                    <span>${emp.performance}%</span>
+                    <span>${emp.performance != null ? emp.performance + '%' : '—'}</span>
                 </div>
             </td>
             <td>
