@@ -323,6 +323,7 @@ async function loadNotificationConfig() {
         if (document.getElementById('notif-smtp-tls'))
             document.getElementById('notif-smtp-tls').checked = config.smtpUseTls;
         setVal('notif-smtp-from', config.smtpFromEmail);
+        setVal('notif-smtp-from-name', config.smtpFromName);
 
         // SES
         setVal('notif-aws-key', config.awsAccessKey);
@@ -407,6 +408,7 @@ async function saveAll() {
             smtpPassword: getVal('notif-smtp-pass'),
             smtpUseTls: document.getElementById('notif-smtp-tls')?.checked ?? true,
             smtpFromEmail: getVal('notif-smtp-from'),
+            smtpFromName: getVal('notif-smtp-from-name'),
             awsRegion: getVal('notif-aws-region'),
             mailgunDomain: getVal('notif-mailgun-domain'),
             mailgunFromEmail: getVal('notif-mailgun-from'),
