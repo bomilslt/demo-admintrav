@@ -173,6 +173,12 @@
                             <option value="mailgun">Mailgun</option>
                         </select>
                     </div>
+                    
+                    <div class="form-section">
+                        <label>Nom Expéditeur (Global)</label>
+                        <input type="text" class="form-input" id="notif-smtp-from-name" placeholder="INTERCITY Transport">
+                        <p class="text-xs text-muted mt-1">S'affichera chez le client, quel que soit le fournisseur (SMTP, SES, Mailgun).</p>
+                    </div>
                 </div>
 
                 <!-- SMTP SETTINGS -->
@@ -204,15 +210,10 @@
                             <input type="email" class="form-input" id="notif-smtp-from"
                                 placeholder="no-reply@intercity.com">
                         </div>
-                        <div class="form-section">
-                            <label>Nom Expéditeur</label>
-                            <input type="text" class="form-input" id="notif-smtp-from-name"
-                                placeholder="INTERCITY Transport">
+                        <div class="form-section flex-row align-center pt-4">
+                            <input type="checkbox" id="notif-smtp-tls" checked>
+                            <label for="notif-smtp-tls" class="mb-0 ml-2">Utiliser TLS</label>
                         </div>
-                    </div>
-                    <div class="form-section flex-row align-center pt-4">
-                        <input type="checkbox" id="notif-smtp-tls" checked>
-                        <label for="notif-smtp-tls" class="mb-0 ml-2">Utiliser TLS</label>
                     </div>
                 </div>
 
